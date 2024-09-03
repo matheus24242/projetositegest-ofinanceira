@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Vendas e Investimentos</title>
+    <style>
+        /* Adicione aqui seus estilos de navegação lateral e layout principal */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        #main {
+            transition: margin-left .5s;
+            padding: 16px;
+        }
+
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #111;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+        }
+
+        .openbtn:hover {
+            background-color: #444;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .left-container, .right-container {
+            width: 45%;
+        }
+
+        .calendar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .month {
+            width: 30%;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+
+        .month:hover {
+            background-color: #ddd;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="registro.html">Registrar Vendas</a>
+    <a href="investimento.html">Investimentos</a>
+    <a href="lucro.html">Lucros</a>
+    <a href="sobre.html">Sobre</a>
+</div>
+
+<div id="main">
+    <button class="openbtn" onclick="openNav()">&#9776; Abrir Menu</button>
+    <h2>Bem vindo! Matheus Zipper</h2>
+    <h4>Seus investimentos e vendas, veja quanto você lucrou nesse mês!</h4>
+
+    <div class="container">
+        <div class="left-container">
+            <h3>Calendários 2024</h3>
+            <div class="calendar">
+                <div class="month" onclick="updateChart(0)">Janeiro</div>
+                <div class="month" onclick="updateChart(1)">Fevereiro</div>
+                <div class="month" onclick="updateChart(2)">Março</div>
+                <div class="month" onclick="updateChart(3)">Abril</div>
+                <div class="month" onclick="updateChart(4)">Maio</div>
+                <div class="month" onclick="updateChart(5)">Junho</div>
+                <div class="month" onclick="updateChart(6)">Julho</div>
+                <div class="month" onclick="updateChart(7)">Agosto</div>
+                <div class="month" onclick="updateChart(8)">Setembro</div>
+                <div class="month" onclick="updateChart(9)">Outubro</div>
+                <div class="month" onclick="updateChart(10)">Novembro</div>
+                <div class="month" onclick="updateChart(11)">Dezembro</div>
+            </div>
+        </div>
+        <div class="right-container">
+            <h3>Gráfico de Ganhos</h3>
+            <div class="chart-container">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<iframe name="iframe_a" style="width: 100%; height: 600px; border: none;"></iframe>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+    }
+
+    const monthlyData = JSON.parse(localStorage.getItem('monthlyData')) || Array(12).fill(0);
+
+    const data = {
+        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        datasets: [{
+            label: 'Ganhos em 2024',
+            data: monthlyData,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'R$ ' + value;
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+
+    function updateChart(monthIndex) {
+        const monthData = monthlyData[monthIndex];
+        myChart.data.labels = [data.labels[monthIndex]];
+        myChart.data.datasets[0].data = [monthData];
+        myChart.update();
+    }
+
+    window.addEventListener('storage', () => {
+        const updatedMonthlyData = JSON.parse(localStorage.getItem('monthlyData'));
+        if (updatedMonthlyData) {
+            monthlyData = updatedMonthlyData;
+            myChart.data.datasets[0].data = monthlyData;
+            myChart.update();
+        }
+    });
+</script>
+
+</body>
+</html>
+
+

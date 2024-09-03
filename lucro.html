@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro e Gestão de Vendas e Finanças</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: hsl(0, 29%, 97%);
+            color: #fff;
+            background: url('/imagem.jpeg')
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #300bd4, #928dab);
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #f0f0f0;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .card p {
+            font-size: 28px;
+            font-weight: 500;
+            color: #e6e6e6;
+        }
+
+        .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #ffffffbb;
+        }
+
+        .icon.sales {
+            color: #00c9ff;
+        }
+
+        .icon.payments {
+            color: #ff4e50;
+        }
+
+        .button {
+            background-color: #4444ff;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #3333cc;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Registro e Gestão de Vendas e Finanças</h1>
+    <div class="dashboard">
+        <div class="card">
+            <div class="icon sales">💼</div>
+            <h2>Vendas</h2>
+            <p id="sales">0</p>
+            <button class="button" onclick="fetchData()">Veja as vendas</button>
+        </div>
+        <div class="card">
+            <div class="icon payments">💵</div>
+            <h2>Pagamentos Recebidos</h2>
+            <p id="payments">0</p>
+            <button class="button" onclick="fetchData()">Veja os pagamentos</button>
+        </div>
+    </div>
+
+    <script>
+        // Função para buscar dados reais de uma API
+        async function fetchData() {
+            try {
+                // Exemplo de requisição GET para uma API que retorna vendas e pagamentos
+                let response = await fetch('https://sua-api-endpoint.com/data');
+                let data = await response.json();
+
+                // Atualizando a interface com os dados reais
+                document.getElementById('sales').innerText = data.sales;
+                document.getElementById('payments').innerText = `R$ ${data.payments.toLocaleString()}`;
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+            }
+        }
+
+        // Chamada inicial para carregar os dados assim que a página carregar
+        fetchData();
+    </script>
+
+</body>
+
+</html>
+
